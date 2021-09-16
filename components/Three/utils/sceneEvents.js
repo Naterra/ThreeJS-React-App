@@ -1,12 +1,35 @@
-const getMousePosition = (refToUpdate, e) => {
+const getMousePosition = ( e, renderer ) => {
     const {top, left, width, height} = renderer.domElement.getBoundingClientRect();
 
-    refToUpdate.current.x = -1 + 2 * (e.clientX - left) / width; // eslint-disable-line
-    refToUpdate.current.y = 1 - 2 * (e.clientY - top) / height; // eslint-disable-line
+    return {
+        x : -1 + 2 * (e.clientX - left) / width, // eslint-disable-line
+        y : 1 - 2 * (e.clientY - top) / height // eslint-disable-line
+    }
 };
 
 
-function resizeCanvas() {
+
+
+
+const onClickCanvas=(e)=>{console.log('>onClickCanvas', e);}
+
+const onMouseDown=(e, renderer)=>{
+    const mPos = getMousePosition(e, renderer);
+    console.log('>onMouseDown', {mPos});
+}
+
+const onMouseUp=(e)=>{ console.log('>onMouseUp', e);}
+
+
+const onMouseMove=(e)=>{
+    // console.log('>onMouseMove', e);
+}
+const onWheel=(e)=>{
+    // console.log('>onWheel', e);
+}
+const onContextMenu=(e)=>{ console.log('>onContextMenu', e);}
+
+const resizeCanvas =(camera) =>{
     const w  = window.innerWidth;
     const h  = window.innerHeight;
 
@@ -15,18 +38,11 @@ function resizeCanvas() {
 }
 
 
-const onClickCanvas=(e)=>{console.log('>onClickCanvas', e);}
-const onMouseDown=(e)=>{ console.log('>onMouseDown', e);}
-const onMouseUp=(e)=>{ console.log('>onMouseUp', e);}
-const onContextMenu=(e)=>{ console.log('>onContextMenu', e);}
-const onMouseMove=(e)=>{ console.log('>onMouseMove', e);}
-const onWheel=(e)=>{ console.log('>onWheel', e);}
 
-
-export const addSceneEventListeners=(renderer)=>{
-    renderer.domElement.addEventListener('resize', resizeCanvas);
+export const addSceneEventListeners=(renderer, camera)=>{
+    renderer.domElement.addEventListener('resize', e =>resizeCanvas(camera));
     renderer.domElement.addEventListener('click', onClickCanvas);
-    renderer.domElement.addEventListener('mousedown', onMouseDown);
+    renderer.domElement.addEventListener('mousedown', e=>onMouseDown(e, renderer));
     renderer.domElement.addEventListener('mouseup', onMouseUp);
     renderer.domElement.addEventListener('contextmenu', onContextMenu);
     renderer.domElement.addEventListener('mousemove', onMouseMove);
